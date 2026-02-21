@@ -1,10 +1,5 @@
-FROM caddy:2-builder AS builder
-
-RUN xcaddy build \
-    --with github.com/caddyserver/forwardproxy
-
-FROM caddy:2
-
-COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+FROM ghcr.io/mholt/caddy-l4:latest
 
 COPY Caddyfile /etc/caddy/Caddyfile
+
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
