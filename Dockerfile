@@ -1,5 +1,9 @@
-FROM ghcr.io/mholt/caddy-l4:latest
+FROM alpine:latest
 
-COPY Caddyfile /etc/caddy/Caddyfile
+RUN apk add --no-cache tinyproxy
 
-CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
+RUN sed -i 's/^Port .*/Port 10000/' /etc/tinyproxy/tinyproxy.conf && \
+    sed -i 's/^Allow 127.0.0.1/Allow 0.0.0.0/' /etc/tinyproxy/tinyproxy.conf && \
+    echo "DisableViaHeader Yes" >> /etc/tinyproxy/tinyproxy.conf
+
+CMD tinyproxy -d
