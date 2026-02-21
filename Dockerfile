@@ -1,11 +1,10 @@
-FROM alpine:latest
+FROM caddy:2-builder AS builder
 
-RUN apk add --no-cache tinyproxy
+RUN xcaddy build \
+    --with github.com/caddyserver/forwardproxy
 
-RUN sed -i 's/^Port .*/Port 10000/' /etc/tinyproxy/tinyproxy.conf && \
-    sed -i 's/^#Allow 127.0.0.1/Allow 0.0.0.0/' /etc/tinyproxy/tinyproxy.conf && \
-    sed -i 's/^Allow 127.0.0.1/Allow 0.0.0.0/' /etc/tinyproxy/tinyproxy.conf
+FROM caddy:2
 
-EXPOSE 10000
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
-CMD ["tinyproxy", "-d"]
+COPY Caddyfile /etc/caddy/Caddyfile
