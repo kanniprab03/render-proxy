@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: kotatsu-proxy
+    env: docker
+    plan: free
+    region: singapore
